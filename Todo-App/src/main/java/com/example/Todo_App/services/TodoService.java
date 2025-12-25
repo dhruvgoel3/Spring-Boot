@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoService {
@@ -31,8 +32,19 @@ public class TodoService {
         todoRepository.deleteById(id);
     }
 
-    public void getTodoById(Long id) {
-        todoRepository.findAllById(Collections.singleton(id));
+    public List<Todo> getAllTodos() {
+        return todoRepository.findAll();
+    }
+
+    public Optional<Todo> getTodoById(Long id) {
+        return todoRepository.findById(id);
+    }
+
+    public Todo updateTodo(Long id, Todo updatedTodo) {
+        Todo existingTodo = todoRepository.findById(id).orElseThrow(() -> new RuntimeException("Todo not found"));
+        existingTodo.setTitle(updatedTodo.getTitle());
+        existingTodo.setDescription(updatedTodo.getDescription());
+        return todoRepository.save(existingTodo);
 
     }
 
