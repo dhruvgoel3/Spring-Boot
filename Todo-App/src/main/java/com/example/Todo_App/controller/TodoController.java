@@ -4,6 +4,7 @@ import com.example.Todo_App.entity.Todo;
 
 import com.example.Todo_App.services.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +21,8 @@ public class TodoController {
     }
 
     @PostMapping
-    public Todo createTodo(@RequestBody Todo todo) {
-        return todoService.createTodo(todo);
+    public ResponseEntity<Todo> createTodo(@PathVariable Long id, @RequestBody Todo todo) {
+        return ResponseEntity.ok(todoService.createTodo(todo));
     }
 
     @GetMapping
