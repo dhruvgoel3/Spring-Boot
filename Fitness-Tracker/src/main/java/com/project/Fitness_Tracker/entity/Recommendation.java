@@ -1,4 +1,4 @@
 package com.project.Fitness_Tracker.entity;
 
-public class Reccomendations {
+public class Recommendation {
 }

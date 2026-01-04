@@ -31,7 +31,7 @@ public class Doctor {
     private String specialization;
 
     @Column(unique = true, length = 100)
-    private String email;
+     private String email;
 
     @ManyToMany(mappedBy = "doctors")
     private Set<Department> departments = new HashSet<>();
