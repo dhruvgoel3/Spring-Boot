@@ -1,4 +1,4 @@
-package com.project.Fitness_Tracker.entity;
+package com.project.Fitness_Tracker.entity.enums;
 
 public enum ActivityType {
     RUNNING,

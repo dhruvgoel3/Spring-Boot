@@ -1,14 +1,15 @@
 package com.project.Fitness_Tracker.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.Fitness_Tracker.entity.enums.ActivityType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.sql.SQLType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,8 @@ import java.util.Map;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
