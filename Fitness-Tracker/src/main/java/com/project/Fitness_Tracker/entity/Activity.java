@@ -46,3 +46,5 @@ public class Activity {
     @JsonIgnore
     private List<Recommendation> recommendations = new ArrayList<>();
 }
+// http://chatgpt.com/c/69745d86-99f0-8323-ae95-cb14d0bf1a24
+// Refer this link to understand all the relationships between the entities

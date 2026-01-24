@@ -1,8 +1,10 @@
 package com.project.Fitness_Tracker.service;
 
 import com.project.Fitness_Tracker.DTO.RegisterRequest;
+import com.project.Fitness_Tracker.DTO.UserResponse;
 import com.project.Fitness_Tracker.entity.User;
 import com.project.Fitness_Tracker.repository.UserRepository;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,21 +18,28 @@ public class UserService {
     UserRepository userRepository;
 
     //  Create User
-    public User register(RegisterRequest request) {
-        User user = new User(
-                null,
-                request.getEmail(),
-                request.getPassword(),
-                request.getFirstName(),
-                request.getLastName(),
-                Instant.parse("2007-12-03T10:15:30Z").atZone(ZoneOffset.UTC).toLocalDateTime(),
-                Instant.parse("2007-12-03T10:15:30Z").atZone(ZoneOffset.UTC).toLocalDateTime(),
-                List.of(),
-                List.of()
+    public UserResponse register(RegisterRequest request) {
+        User user = User.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .build(); // whole work is done by it , object will be created
 
+        User savedUser = userRepository.save(user);
+        return mapToResponse(savedUser);
+    }
 
-        );
-        return userRepository.save(user);
+    private UserResponse mapToResponse(User savedUser) {
+        UserResponse response = new UserResponse();
+        response.setId(savedUser.getId());
+        response.setEmail(savedUser.getEmail());
+        response.setPassword(savedUser.getPassword());
+        response.setFirstName(savedUser.getFirstName());
+        response.setLastName(savedUser.getLastName());
+        response.setCreatedAt(savedUser.getCreatedAt());
+        response.setUpdatedAt(savedUser.getUpdateAt());
+        return response;
     }
 
 
