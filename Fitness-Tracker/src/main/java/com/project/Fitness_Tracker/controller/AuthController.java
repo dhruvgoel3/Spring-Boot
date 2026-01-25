@@ -6,6 +6,7 @@ import com.project.Fitness_Tracker.entity.User;
 import com.project.Fitness_Tracker.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,8 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody RegisterRequest registerRequest) {
-        return userService.register(registerRequest);
+    public ResponseEntity<UserResponse> register(@RequestBody RegisterRequest registerRequest) {
+        return ResponseEntity.ok(userService.register(registerRequest));
     }
 
 //    @GetMapping
