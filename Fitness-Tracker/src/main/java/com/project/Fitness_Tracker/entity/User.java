@@ -3,6 +3,8 @@ package com.project.Fitness_Tracker.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,7 +24,9 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+    @CreationTimestamp // auto generated time stamp when data is created first time in db
     private LocalDateTime createdAt;
+    @UpdateTimestamp // auto generated time stamp when anything is updated in db
     private LocalDateTime updateAt;
 
 
