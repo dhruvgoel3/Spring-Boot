@@ -3,9 +3,11 @@ package com.project.Fitness_Tracker.service;
 import com.project.Fitness_Tracker.DTO.ActivityRequest;
 import com.project.Fitness_Tracker.DTO.ActivityResponse;
 import com.project.Fitness_Tracker.entity.Activity;
+import com.project.Fitness_Tracker.entity.User;
 import com.project.Fitness_Tracker.repository.ActivityRepository;
 
 
+import com.project.Fitness_Tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -18,8 +20,12 @@ import java.util.List;
 public class ActivityService {
 
     private final ActivityRepository activityRepository;
+    private final UserRepository userRepository;
 
     public ActivityResponse trackActivity(ActivityRequest request) {
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new RuntimeException("Invalid user: " + request.getUserId()));
 
         Activity activity = Activity.builder()
                 .type(request.getType())
@@ -27,15 +33,17 @@ public class ActivityService {
                 .caloriesBurned(request.getCaloriesBurned())
                 .startTime(request.getStartTime())
                 .additionalMetrics(request.getAdditionalMetrics())
-                .user(request.getUser()) // ideally fetch from DB
                 .build();
 
-        activityRepository.save(activity);
+        activity.setUser(user);
 
-        return mapToResponse(activity);
+        Activity savedActivity = activityRepository.save(activity);
+
+        return mapToResponse(savedActivity);
     }
 
-    public List<ActivityResponse> getAllActivities() {
+
+    public List<ActivityResponse> getUserActivities() {
         return activityRepository.findAll()
                 .stream()
                 .map(this::mapToResponse)

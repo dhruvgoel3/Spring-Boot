@@ -23,6 +23,6 @@ public class ActivityController {
 
     @GetMapping
     public ResponseEntity<List<ActivityResponse>> getAllActivities() {
-        return ResponseEntity.ok(activityService.getAllActivities());
+        return ResponseEntity.ok(activityService.getUserActivities());
     }
 }
