@@ -4,6 +4,8 @@ package com.example.Todo_App.mappers;
 import com.example.Todo_App.DTO.UserRequestDTO;
 import com.example.Todo_App.DTO.UserResponseDTO;
 import com.example.Todo_App.entity.User;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,16 +15,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UserMapper {
+    @Autowired
+    private final ModelMapper modelMapper;
+
+    public UserMapper(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+    }
 
     /**
      * Convert UserRequestDTO to User Entity
      * Used when creating a new user from client data
      */
     public User toEntity(UserRequestDTO dto) {
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());  // In real app, encrypt this first!
+        User user = this.modelMapper.map(dto, User.class);
+//        user.setUsername(dto.getUsername());
+//        user.setEmail(dto.getEmail());
+//        user.setPassword(dto.getPassword());  // In real app, encrypt this first!
         return user;
     }
 
@@ -32,10 +40,10 @@ public class UserMapper {
      * SECURITY: Notice we don't copy the password!
      */
     public UserResponseDTO toResponseDTO(User user) {
-        UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
-        dto.setUsername(user.getUsername());
-        dto.setEmail(user.getEmail());
+        UserResponseDTO dto = this.modelMapper.map(user, UserResponseDTO.class);
+//        dto.setId(user.getId());
+//        dto.setUsername(user.getUsername());
+//        dto.setEmail(user.getEmail());
         // NO password! This keeps it secure
         return dto;
     }
