@@ -1,53 +1,96 @@
 package com.example.Todo_App.services;
 
+import com.example.Todo_App.DTO.UserRequestDTO;
+import com.example.Todo_App.DTO.UserResponseDTO;
 import com.example.Todo_App.entity.User;
+import com.example.Todo_App.mappers.UserMapper;
 import com.example.Todo_App.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
 
-    public void userService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     // Create User
-    public User createUser(User user) {
-        userRepository.save(user);
-        return user;
+    public UserResponseDTO createUser(UserRequestDTO requestDTO) {
+        if (userRepository.existsByUsername(requestDTO.getUsername())) {
+            throw new RuntimeException("Username already exits :-" + requestDTO.getUsername());
+        }
+
+        if (userRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new RuntimeException("Email already exists :- " + requestDTO.getEmail());
+        }
+
+        User user = userMapper.toEntity(requestDTO); // convert dto into entity
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponseDTO(savedUser);
     }
 
-    // UpdateUser
-    public User updateUser(Long id, User updatedUser) {
-        User exixtingUser = userRepository.findById(id).orElseThrow(() -> new RuntimeException("No User foud with this Id.;"));
-        exixtingUser.setEmail(updatedUser.getEmail());
-        exixtingUser.setPassword(updatedUser.getPassword());
-        return updatedUser;
+    /**
+     * Get user by ID
+     */
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        return userMapper.toResponseDTO(user);
     }
 
-    // GetAllUser
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    /**
+     * Get all users
+     */
+    public List<UserResponseDTO> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toResponseDTO)  // Convert each User to UserResponseDTO
+                .collect(Collectors.toList());
     }
 
-    //GetByID
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    /**
+     * Update user
+     */
+    public UserResponseDTO updateUser(Long id, UserRequestDTO requestDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+
+        // Check if new username is taken by another user
+        if (!user.getUsername().equals(requestDTO.getUsername())
+                && userRepository.existsByUsername(requestDTO.getUsername())) {
+            throw new RuntimeException("Username already exists: " + requestDTO.getUsername());
+        }
+
+        // Check if new email is taken by another user
+        if (!user.getEmail().equals(requestDTO.getEmail())
+                && userRepository.existsByEmail(requestDTO.getEmail())) {
+            throw new RuntimeException("Email already exists: " + requestDTO.getEmail());
+        }
+
+        // Update entity from DTO
+        userMapper.updateEntityFromDTO(user, requestDTO);
+
+        // Save updated entity
+        User updatedUser = userRepository.save(user);
+
+        return userMapper.toResponseDTO(updatedUser);
     }
 
-    // DeleteAllUser
-    public void deleteALlUser() {
-        userRepository.deleteAll();
-    }
+    /**
+     * Delete user
+     */
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found with id: " + id);
+        }
 
-    // DeleteById
-    public void deleteByID(Long id) {
         userRepository.deleteById(id);
     }
 }
