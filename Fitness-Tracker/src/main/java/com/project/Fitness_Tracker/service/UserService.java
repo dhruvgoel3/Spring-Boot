@@ -4,7 +4,9 @@ import com.project.Fitness_Tracker.DTO.RegisterRequest;
 import com.project.Fitness_Tracker.DTO.UserResponse;
 import com.project.Fitness_Tracker.entity.User;
 import com.project.Fitness_Tracker.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,12 @@ import java.time.ZoneOffset;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private final ModelMapper modelMapper;
 
     //  Create User
     public UserResponse register(RegisterRequest request) {
@@ -31,14 +36,14 @@ public class UserService {
     }
 
     private UserResponse mapToResponse(User savedUser) {
-        UserResponse response = new UserResponse();
-        response.setId(savedUser.getId());
-        response.setEmail(savedUser.getEmail());
-        response.setPassword(savedUser.getPassword());
-        response.setFirstName(savedUser.getFirstName());
-        response.setLastName(savedUser.getLastName());
-        response.setCreatedAt(savedUser.getCreatedAt());
-        response.setUpdatedAt(savedUser.getUpdateAt());
+        UserResponse response = this.modelMapper.map(savedUser, UserResponse.class);
+//        response.setId(savedUser.getId());
+//        response.setEmail(savedUser.getEmail());
+//        response.setPassword(savedUser.getPassword());
+//        response.setFirstName(savedUser.getFirstName());
+//        response.setLastName(savedUser.getLastName());
+//        response.setCreatedAt(savedUser.getCreatedAt());
+//        response.setUpdatedAt(savedUser.getUpdateAt());
         return response;
     }
 

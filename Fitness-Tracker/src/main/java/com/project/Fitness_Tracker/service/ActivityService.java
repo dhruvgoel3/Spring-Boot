@@ -5,13 +5,10 @@ import com.project.Fitness_Tracker.DTO.ActivityResponse;
 import com.project.Fitness_Tracker.entity.Activity;
 import com.project.Fitness_Tracker.entity.User;
 import com.project.Fitness_Tracker.repository.ActivityRepository;
-
-
 import com.project.Fitness_Tracker.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,20 +19,14 @@ public class ActivityService {
 
     private final ActivityRepository activityRepository;
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     public ActivityResponse trackActivity(ActivityRequest request) {
 
         User user = userRepository.findById(request.getUserId())
                 .orElseThrow(() -> new RuntimeException("Invalid user: " + request.getUserId()));
 
-        Activity activity = Activity.builder()
-                .type(request.getType())
-                .duration(request.getDuration())
-                .caloriesBurned(request.getCaloriesBurned())
-                .startTime(request.getStartTime())
-                .additionalMetrics(request.getAdditionalMetrics())
-                .build();
-
+        Activity activity = modelMapper.map(request, Activity.class);
         activity.setUser(user);
 
         Activity savedActivity = activityRepository.save(activity);
@@ -43,25 +34,16 @@ public class ActivityService {
         return mapToResponse(savedActivity);
     }
 
-
-    public List<ActivityResponse> getUserActivities(String userid) {
-        List<Activity> activityList = activityRepository.findByUserId(userid);
-        return activityList.stream().map(this::mapToResponse).collect(Collectors.toList()
-        );
-
+    public List<ActivityResponse> getUserActivities(String userId) {
+        List<Activity> activityList = activityRepository.findByUserId(userId);
+        return activityList.stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     private ActivityResponse mapToResponse(Activity activity) {
-        return ActivityResponse.builder()
-                .id(activity.getId())
-                .type(activity.getType())
-                .duration(activity.getDuration())
-                .caloriesBurned(activity.getCaloriesBurned())
-                .startTime(activity.getStartTime())
-                .additionalMetrics(activity.getAdditionalMetrics())
-                .createdAt(activity.getCreatedAt())
-                .updatedAt(activity.getUpdatedAt())
-                .build();
+        ActivityResponse response = modelMapper.map(activity, ActivityResponse.class);
+        response.setUserId(activity.getUser().getId());
+        return response;
     }
 }
-
