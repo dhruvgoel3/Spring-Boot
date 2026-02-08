@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping
 public class SecurityController {
 
     @Autowired
@@ -35,30 +35,20 @@ public class SecurityController {
         return "User is OK";
     }
 
-    @PostMapping("/login")
+    @PostMapping("/signin")
     public String login(@RequestBody LoginRequest loginRequest) {
-
         Authentication authentication;
-
-
         try {
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            loginRequest.getUsername(),
-                            loginRequest.getPassword()
-                    )
-            );
-
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
             e.printStackTrace();
             return "Could not authenticate";
         }
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        jwtUtils.generateTokenFromUserName(userDetails.getUsername());
+        String jwtToken = jwtUtils.generateTokenFromUserName(userDetails.getUsername());
+        return jwtToken;
 
 
-        return "Login Successful";
     }
 }

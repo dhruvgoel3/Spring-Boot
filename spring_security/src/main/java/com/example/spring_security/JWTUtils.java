@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JWTUtils {
 
-    private String jwtSecret = "a-string-secret-at-least-256-bits-long";
+    private String jwtSecret = "YS1zdHJpbmctc2VjcmV0LWF0LWxlYXN0LTI1Ni1iaXRzLWxvbmc=";
     private int jwtExpirations = 172800000;
 
     public String getJwtFromHeader() {
