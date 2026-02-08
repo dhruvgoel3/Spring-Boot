@@ -1,4 +1,4 @@
-package com.example.Todo_App.security;
+package com.example.spring_security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -9,7 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -24,11 +25,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                .requestMatchers("/admin/**").hasRole("ADMIN")
-                .requestMatchers("/user/**").hasRole("USER")
-                .anyRequest()
-                .authenticated());
+        http.authorizeHttpRequests(authorizeRequests -> authorizeRequests.requestMatchers("/admin/**").hasRole("ADMIN").requestMatchers("/user/**").hasRole("USER").anyRequest().authenticated());
         http.httpBasic(Customizer.withDefaults());
         return http.build();
 
@@ -36,20 +33,20 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails user1 = User.withUsername("user1")
-                .password("{noop}password1")
-                .roles("USER")
-                .build();
+        UserDetails user1 = User
+                .withUsername("user1")
+                .password(passwordEncoder().encode("password1"))
+                .roles("USER").build();
 
-        UserDetails user2 = User.withUsername("user2")
-                .password("{noop}password2")
-                .roles("USER")
-                .build();
+        UserDetails user2 = User
+                .withUsername("user2")
+                .password(passwordEncoder().encode("password2"))
+                .roles("USER").build();
 
-        UserDetails admin = User.withUsername("admin")
-                .password("{noop}admin123")
-                .roles("ADMIN")
-                .build();
+        UserDetails admin = User
+                .withUsername("admin")
+                .password(passwordEncoder().encode("admin123"))
+                .roles("ADMIN").build();
 
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
 
@@ -65,5 +62,10 @@ public class SecurityConfig {
 
         return manager;
 
+
+    }
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

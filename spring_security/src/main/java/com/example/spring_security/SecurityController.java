@@ -1,14 +1,13 @@
-package com.example.Todo_App.controller;
-
+package com.example.spring_security;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/health")
-public class HealthCheck {
-    @PreAuthorize("/hasRole(ADMIN)")
+@RequestMapping
+public class SecurityController {
+    @PreAuthorize("/hasRole('ADMIN' , 'USER')")
     @GetMapping
     public String healthCheck() {
         return "Health is OK";
@@ -23,5 +22,4 @@ public class HealthCheck {
     public String sayUserHello() {
         return "User is OK";
     }
-
 }
