@@ -1,13 +1,25 @@
 package com.example.spring_security;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/")
 public class SecurityController {
-    @PreAuthorize("/hasRole('ADMIN' , 'USER')")
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
+    JWTUtils jwtUtils;
+
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @GetMapping
     public String healthCheck() {
         return "Health is OK";
@@ -15,11 +27,38 @@ public class SecurityController {
 
     @GetMapping("/admin/hello")
     public String sayAdminHello() {
-        return "admin is OK";
+        return "Admin is OK";
     }
 
     @GetMapping("/user/hello")
     public String sayUserHello() {
         return "User is OK";
+    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest) {
+
+        Authentication authentication;
+
+
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
+
+        } catch (AuthenticationException e) {
+            e.printStackTrace();
+            return "Could not authenticate";
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        jwtUtils.generateTokenFromUserName(userDetails.getUsername());
+
+
+        return "Login Successful";
     }
 }
