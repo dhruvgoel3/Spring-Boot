@@ -36,4 +36,3 @@ public class JWTUtils {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 }
-// This file is responsible for JWt utils
