@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -25,6 +26,8 @@ public class SecurityConfig {
 
     @Autowired
     DataSource dataSource;
+    @Autowired
+    AuthTokenFilter authTokenFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -34,6 +37,7 @@ public class SecurityConfig {
                         requestMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/signin/**").permitAll().anyRequest().authenticated());
 //        http.httpBasic(Customizer.withDefaults());
+        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }
@@ -74,4 +78,5 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration builder) throws Exception {
         return builder.getAuthenticationManager();
     }
+
 }

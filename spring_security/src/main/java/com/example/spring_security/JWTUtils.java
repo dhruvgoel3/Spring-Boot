@@ -3,8 +3,11 @@ package com.example.spring_security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequestWrapper;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 
@@ -14,8 +17,11 @@ public class JWTUtils {
     private String jwtSecret = "YS1zdHJpbmctc2VjcmV0LWF0LWxlYXN0LTI1Ni1iaXRzLWxvbmc=";
     private int jwtExpirations = 172800000;
 
-    public String getJwtFromHeader() {
-        return "";
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer"))
+            return bearerToken.substring(7);
+        return null;
     }
 
     public String generateTokenFromUserName(String username) {
@@ -27,7 +33,12 @@ public class JWTUtils {
                 .compact();
     }
 
-    public boolean validJwtToken() {
+    public boolean validJwtToken(String jwtToken) {
+        try {
+            Jwts.parser().verifyWith((SecretKey) Key()).build().parseSignedClaims(jwtToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return true;
 
     }
