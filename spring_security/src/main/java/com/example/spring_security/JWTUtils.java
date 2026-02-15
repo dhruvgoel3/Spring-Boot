@@ -46,4 +46,9 @@ public class JWTUtils {
     private Key Key() {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
+
+    public String getUsernameFromToken(String jwt) {
+        return Jwts.parser().verifyWith((SecretKey) Key())
+                .build().parseSignedClaims(jwt).getPayload().getSubject();
+    }
 }
