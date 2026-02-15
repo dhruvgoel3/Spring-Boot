@@ -46,7 +46,7 @@ public class SecurityController {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwtToken = jwtUtils.generateTokenFromUserName(userDetails.getUsername());
+        String jwtToken = jwtUtils.generateTokenFromUserName(userDetails);
         return jwtToken;
 
 

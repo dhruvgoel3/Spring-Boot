@@ -1,11 +1,14 @@
 package com.example.spring_security;
 
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,9 +36,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if (jwt != null && jwtUtils.validJwtToken(jwt)) {
                 String username = jwtUtils.getUsernameFromToken(jwt);
 //                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                Claims claims = jwtUtils.getAllClaims(jwt);
+                List<String> roles = claims.get("roles", List.class);
+                List<GrantedAuthority> authorities = List.of();
+                if (roles != null) {
+                    authorities = roles.stream().map(role -> (GrantedAuthority) new SimpleGrantedAuthority(role)).toList();
+                }
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(username,
-                                null, List.of()
+                                null, authorities
                         );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -45,6 +54,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        filterChain.doFilter(request, response);
+
 
     }
 
