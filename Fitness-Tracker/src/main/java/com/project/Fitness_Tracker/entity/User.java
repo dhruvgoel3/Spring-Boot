@@ -24,6 +24,9 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserROle.User;
     @CreationTimestamp // auto generated time stamp when data is created first time in db
     private LocalDateTime createdAt;
     @UpdateTimestamp // auto generated time stamp when anything is updated in db
