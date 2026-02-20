@@ -26,3 +26,4 @@ public class ActivityController {
         return ResponseEntity.ok(activityService.getUserActivities(userId));
     }
 }
+//
