@@ -1,5 +1,6 @@
 package com.example.evebizz.entities;
 
+import com.example.evebizz.enums.ListingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;

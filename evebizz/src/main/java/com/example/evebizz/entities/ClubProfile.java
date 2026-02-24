@@ -1,6 +1,6 @@
 package com.example.evebizz.entities;
 
-import com.example.evebizz.entities.User;
+import com.example.evebizz.enums.ClubType;
 import jakarta.persistence.*;
 import lombok.*;
 

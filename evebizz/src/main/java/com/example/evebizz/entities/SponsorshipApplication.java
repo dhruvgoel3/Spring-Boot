@@ -1,6 +1,6 @@
-package com.eventhub.entity;
+package com.example.evebizz.entities;
 
-import com.eventhub.enums.ApplicationStatus;
+import com.example.evebizz.enums.ApplicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 

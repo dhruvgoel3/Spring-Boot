@@ -1,7 +1,7 @@
-package com.eventhub.entity;
+package com.example.evebizz.entities;
 
-import com.eventhub.enums.CollaborationStatus;
-import com.eventhub.enums.EventType;
+import com.example.evebizz.enums.CollaborationStatus;
+import com.example.evebizz.enums.EventType;
 import jakarta.persistence.*;
 import lombok.*;
 
