@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "collaboration_interests")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CollaborationInterest {
 
@@ -20,7 +22,7 @@ public class CollaborationInterest {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "request_id", nullable = false)
-    private com.eventhub.entity.CollaborationRequest request;
+    private CollaborationRequest request;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interested_club_id", nullable = false)

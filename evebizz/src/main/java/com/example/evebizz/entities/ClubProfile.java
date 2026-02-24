@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "club_profiles")
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ClubProfile {
 
