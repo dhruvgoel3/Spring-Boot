@@ -89,3 +89,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder(12);
     }
 }
+// security config class
