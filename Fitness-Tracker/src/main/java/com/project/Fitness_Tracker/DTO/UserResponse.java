@@ -3,7 +3,6 @@ package com.project.Fitness_Tracker.DTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.cglib.core.Local;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +12,6 @@ import java.time.LocalDateTime;
 public class UserResponse {
     private String id;
     private String email;
-    private String password;
     private String firstName;
     private String lastName;
     private LocalDateTime createdAt;
