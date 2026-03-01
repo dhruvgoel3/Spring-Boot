@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Fitness-Tracker" type="Application" factoryName="Application">
+    <envs>
+      <env name="DB_URL" value="jdbc:mysql://localhost:3306/fitnesstracker" />
+      <env name="DB_USER" value="root" />
+      <env name="DB_PWD" value="Dhruvgoel@261062" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="com.project.Fitness_Tracker.FitnessTrackerApplication" />
+    <module name="Fitness-Tracker" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
