@@ -10,6 +10,7 @@ import com.example.Todo_App.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -92,6 +93,10 @@ public class TodoService {
         }
 
         todoRepository.deleteById(id);
+    }
+
+    public static int addTwoNumbers(int a, int b) {
+        return a + b;
     }
 
 
