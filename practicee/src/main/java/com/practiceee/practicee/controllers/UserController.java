@@ -1,7 +1,10 @@
 package com.practiceee.practicee.controllers;
 
+import com.practiceee.practicee.dtos.UserRequestDTO;
+import com.practiceee.practicee.dtos.UserResponseDTO;
 import com.practiceee.practicee.entitiy.User;
 import com.practiceee.practicee.services.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,8 +22,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User response = userService.createUser(user);
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO requestDTO) {
+        UserResponseDTO response = userService.createUser(requestDTO);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
 
     }

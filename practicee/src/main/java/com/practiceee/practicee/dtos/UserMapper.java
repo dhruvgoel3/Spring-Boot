@@ -1,7 +1,6 @@
 package com.practiceee.practicee.dtos;
 
 import com.practiceee.practicee.entitiy.User;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,7 @@ public class UserMapper {
      * Convert UserRequestDTO to User Entity
      * Used when creating a new user from client data
      */
-    public User toEntity(UserResponseDTO dto) {
+    public User toEntity(UserRequestDTO dto) {
         User user = this.modelMapper.map(dto, User.class);
         return user;
 

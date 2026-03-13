@@ -1,10 +1,8 @@
 package com.practiceee.practicee.controllers;
 
 import com.practiceee.practicee.entitiy.Todo;
-import com.practiceee.practicee.entitiy.User;
 import com.practiceee.practicee.services.TodoService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,40 +12,53 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("api/todo")
+@RequestMapping("api/users/{userId}/todos")
 @RequiredArgsConstructor
 public class TodoController {
     @Autowired
     private final TodoService todoService;
 
-    @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
-        Todo response = todoService.createTodo(todo);
+    @PostMapping()
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo,
+                                           @PathVariable Long userId) {
+
+        Todo response = todoService.createTodo(todo, userId);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
-        Todo response = todoService.updateTodo(id, todo);
+    @PutMapping("/{todoId}")
+    public ResponseEntity<Todo> updateTodo(
+            @PathVariable Long userId,
+            @PathVariable Long todoId,
+            @RequestBody Todo todo) {
+
+        Todo response = todoService.updateTodo(userId, todoId, todo);
+
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("getAllTodo")
-    public ResponseEntity<List<Todo>> getAllTodos() {
-        List<Todo> response = todoService.getAllTodos();
+    @GetMapping
+    public ResponseEntity<List<Todo>> getAllTodosOfUser(@PathVariable Long userId) {
+        List<Todo> response = todoService.getAllTodosOfUser(userId);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Optional<Todo>> getTodoById(@PathVariable Long id) {
-        Optional<Todo> response = todoService.getTodoById(id);
+    @GetMapping("/{todoId}")
+    public ResponseEntity<Optional<Todo>> getTodoByTodoId(@PathVariable Long todoId,
+                                                          @PathVariable Long userId) {
+
+        Optional<Todo> response = todoService.getTodoById(todoId, userId);
         return ResponseEntity.ok(response);
 
     }
 
-    @DeleteMapping
-    public void deleteTodoById(@PathVariable Long id) {
-        todoService.deleteById(id);
+    @DeleteMapping("/{todoId}")
+    public ResponseEntity<String> deleteTodoById(@PathVariable Long todoId,
+                                                 @PathVariable Long userId) {
+
+        todoService.deleteById(userId, todoId);
+        return ResponseEntity.ok("Todo deleted successfully");
+
     }
 
 
