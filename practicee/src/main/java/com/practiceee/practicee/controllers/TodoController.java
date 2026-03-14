@@ -3,37 +3,30 @@ package com.practiceee.practicee.controllers;
 import com.practiceee.practicee.entitiy.Todo;
 import com.practiceee.practicee.services.TodoService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/users/{userId}/todos")
 @RequiredArgsConstructor
 public class TodoController {
-    @Autowired
+
     private final TodoService todoService;
 
-    @PostMapping()
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo,
-                                           @PathVariable Long userId) {
+    @PostMapping
+    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo, @PathVariable Long userId) {
 
         Todo response = todoService.createTodo(todo, userId);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{todoId}")
-    public ResponseEntity<Todo> updateTodo(
-            @PathVariable Long userId,
-            @PathVariable Long todoId,
-            @RequestBody Todo todo) {
+    public ResponseEntity<Todo> updateTodo(@PathVariable Long userId, @PathVariable Long todoId, @RequestBody Todo todo) {
 
         Todo response = todoService.updateTodo(userId, todoId, todo);
-
         return ResponseEntity.ok(response);
     }
 
@@ -44,22 +37,16 @@ public class TodoController {
     }
 
     @GetMapping("/{todoId}")
-    public ResponseEntity<Optional<Todo>> getTodoByTodoId(@PathVariable Long todoId,
-                                                          @PathVariable Long userId) {
+    public ResponseEntity<Todo> getTodoByTodoId(@PathVariable Long userId, @PathVariable Long todoId) {
 
-        Optional<Todo> response = todoService.getTodoById(todoId, userId);
+        Todo response = todoService.getTodoById(todoId, userId);
         return ResponseEntity.ok(response);
-
     }
 
     @DeleteMapping("/{todoId}")
-    public ResponseEntity<String> deleteTodoById(@PathVariable Long todoId,
-                                                 @PathVariable Long userId) {
+    public ResponseEntity<String> deleteTodoById(@PathVariable Long userId, @PathVariable Long todoId) {
 
         todoService.deleteById(userId, todoId);
         return ResponseEntity.ok("Todo deleted successfully");
-
     }
-
-
 }

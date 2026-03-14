@@ -7,9 +7,7 @@ import com.practiceee.practicee.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,27 +18,34 @@ public class TodoService {
     private final UserRepository userRepository;
 
 
+    // CREATE TODO
     public Todo createTodo(Todo todo, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found !"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
         todo.setUser(user);
+
         return todoRepository.save(todo);
     }
 
+
+    // UPDATE TODO
     public Todo updateTodo(Long userId, Long todoId, Todo todo) {
-        Optional<Todo> existingTodoOptional = todoRepository.findById(todoId);
-        if (existingTodoOptional.isPresent()) {
-            Todo existingTodo = existingTodoOptional.get();
-            // Check if this todo belongs to the given user
-            if (!existingTodo.getUser().getUserId().equals(userId)) {
-                throw new RuntimeException("This todo does not belong to this user");
-            }
-            existingTodo.setTitle(todo.getTitle());
-            existingTodo.setDescription(todo.getDescription());
-            return todoRepository.save(existingTodo);
-        } else {
-            throw new RuntimeException("Todo not found");
+
+        Todo existingTodo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
+
+        if (!existingTodo.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("This todo does not belong to this user");
         }
+
+        existingTodo.setTitle(todo.getTitle());
+        existingTodo.setDescription(todo.getDescription());
+
+        return todoRepository.save(existingTodo);
     }
+
 
     // GET ALL TODOS OF A USER
     public List<Todo> getAllTodosOfUser(Long userId) {
@@ -51,15 +56,26 @@ public class TodoService {
         return todoRepository.findByUserUserId(user.getUserId());
     }
 
-    public Optional<Todo> getTodoById(Long todoId, Long userId) {
-        Todo todo = todoRepository.findById(todoId).orElseThrow(() -> new RuntimeException("Todo not found"));
+
+    // GET TODO BY ID
+    public Todo getTodoById(Long todoId, Long userId) {
+
+        Todo todo = todoRepository.findById(todoId)
+                .orElseThrow(() -> new RuntimeException("Todo not found"));
+
         if (!todo.getUser().getUserId().equals(userId)) {
             throw new RuntimeException("This todo does not belong to this user");
         }
-        return Optional.of(todo);
+
+        return todo;
     }
 
-    public void deleteById(Long id, Long todoId) {
-        todoRepository.findById(id);
+
+    // DELETE TODO
+    public void deleteById(Long userId, Long todoId) {
+
+        Todo todo = getTodoById(todoId, userId);
+
+        todoRepository.delete(todo);
     }
 }
