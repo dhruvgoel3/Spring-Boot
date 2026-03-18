@@ -19,6 +19,6 @@ public class TodoRequestDTO {
     private String description;
 
     @NotNull(message = "User ID is required")
-    private Long userId;  // Which user does this todo belong to?
+    private Long userId;  // Which user does this todo belong to ?
 
 }

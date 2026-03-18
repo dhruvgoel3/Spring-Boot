@@ -19,7 +19,7 @@ public class NoteController {
         return response;
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     public Notes getAllNoteById(@PathVariable String id) {
         return noteService.getNoteById(id);
 

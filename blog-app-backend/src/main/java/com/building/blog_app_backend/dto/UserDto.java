@@ -1,20 +1,15 @@
-package com.building.blog_app_backend.entities;
+package com.building.blog_app_backend.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
-@Table(name = "posts")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class UserDto {
+
     private int id;
-    @Column(name = "user_name", nullable = false, length = 100)
     private String name;
     private String email;
     private String password;

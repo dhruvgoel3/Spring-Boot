@@ -6,8 +6,9 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +45,10 @@ public class NoteService {
 
     public void deleteNote(String id) {
         notesRepository.deleteById(id);
+    }
+    @Cacheable(value = "notes" , key = "#noteId")
+    public Notes getById(String noteId) {
+        return notesRepository.findById(noteId).orElseThrow(() -> new RuntimeException("Note with given id not found"));
     }
 
 }

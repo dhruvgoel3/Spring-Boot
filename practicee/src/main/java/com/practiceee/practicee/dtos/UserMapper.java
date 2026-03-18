@@ -21,7 +21,7 @@ public class UserMapper {
      * Convert UserRequestDTO to User Entity
      * Used when creating a new user from client data
      */
-    public User toEntity(UserRequestDTO dto) {
+    public User dtoToEntity(UserRequestDTO dto) {
         User user = this.modelMapper.map(dto, User.class);
         return user;
 
@@ -30,9 +30,9 @@ public class UserMapper {
     /**
      * Convert User Entity to UserResponseDTO
      * Used when sending user data back to client
-     * SECURITY: Notice we don't copy the password!
+     * SECURITY: Notice we don't copy the password !
      */
-    public UserResponseDTO userResponseDTO(User user) {
+    public UserResponseDTO entityToDTO(User user) {
         UserResponseDTO dto = this.modelMapper.map(user, UserResponseDTO.class);
         return dto;
     }
