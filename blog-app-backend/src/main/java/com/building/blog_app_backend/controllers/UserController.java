@@ -3,6 +3,7 @@ package com.building.blog_app_backend.controllers;
 import com.building.blog_app_backend.dto.UserDto;
 import com.building.blog_app_backend.services.UserService;
 import com.building.blog_app_backend.utils.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,12 +20,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto createdUser = userService.createUser(userDto);
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
-    @PutMapping
+    @PutMapping("/{userId}")
     public ResponseEntity<UserDto> updateUser(@RequestBody UserDto userDto, @PathVariable Integer userId) {
         UserDto user = userService.updateUser(userDto, userId);
         return new ResponseEntity<>(user, HttpStatus.OK);

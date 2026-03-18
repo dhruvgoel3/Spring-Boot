@@ -67,11 +67,6 @@ public class UserService {
     }
 
 
-
-
-
-
-
     // --------------Here is all out ModelMapper classes---------------
     public UserDto userTODto(User user) {
         UserDto userDto = this.modelMapper.map(user, UserDto.class);
