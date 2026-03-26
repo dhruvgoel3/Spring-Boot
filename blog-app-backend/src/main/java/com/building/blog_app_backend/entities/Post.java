@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.awt.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -13,10 +14,17 @@ import java.awt.*;
 @NoArgsConstructor
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
     private Integer postId;
     private String postTitle;
     private String postContent;
-    private Image postImage;
+    private String imageName;
+    private Date addDate;
+
+    @ManyToOne
+    private Category category;
+    @ManyToOne
+    private User user;
+
 
 }

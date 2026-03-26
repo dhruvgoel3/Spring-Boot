@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table
 @Data
@@ -11,10 +14,13 @@ import lombok.NoArgsConstructor;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryId;
     @Column(name = "title")
     private Integer categoryTitle;
     @Column
     private String categoryDescription;
+
+    @OneToMany(mappedBy = "category" , cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 }

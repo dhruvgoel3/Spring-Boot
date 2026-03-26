@@ -5,18 +5,24 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
-@Table(name = "posts")
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "user_name", nullable = false, length = 100)
     private String name;
     private String email;
     private String password;
     private String about;
+
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 }
