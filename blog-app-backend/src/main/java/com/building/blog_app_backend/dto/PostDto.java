@@ -1,7 +1,6 @@
 package com.building.blog_app_backend.dto;
 
-import com.building.blog_app_backend.entities.Category;
-import com.building.blog_app_backend.entities.User;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +13,7 @@ public class PostDto {
     private String postTitle;
     private String postContent;
     private String imageName;
-    private Date addedDate;
-    private Category category;
-    private User user;
+    private Date addDate;
+    private CategoryDto category;
+    private UserDto user;
 }

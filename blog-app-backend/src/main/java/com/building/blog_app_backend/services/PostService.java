@@ -13,6 +13,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,22 +36,34 @@ public class PostService {
         post.setCategory(category);
 
         Post newPost = postRepository.save(post);
-        return this.modelMapper.map(newPost, Post.class);
+        return this.modelMapper.map(newPost, PostDto.class);
     }
 
-//    private PostDto updatePost(PostDto postDto, Integer postId) {
-//
-//    }
-//
-//    public List<PostDto> getAllPost() {
-//
-//    }
-//
-//    public List<PostDto> getPostByCategory(Integer categoryId) {
-//
-//    }
-//
-//    public List<PostDto> getPostByUser(Integer userId) {
-//
-//    }
+    public List<PostDto> getPostByCategory(Integer categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "CategoryId", categoryId));
+        List<Post> posts = postRepository.findByCategory(category);
+
+        List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        return postDtos;
+
+    }
+
+    public List<PostDto> getPostByUser(Integer userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "UserId", userId));
+        List<Post> posts = postRepository.findByUser(user);
+
+        List<PostDto> postDtos = posts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        return postDtos;
+    }
+
+    public List<PostDto> getAllPost() {
+        List<Post> allPosts = postRepository.findAll();
+        List<PostDto> postDtos = allPosts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+        return postDtos;
+    }
+
+    public PostDto getPostById(Integer postId)
+    {
+        Post postDto = postRepository.findById(postId);
+    }
 }
