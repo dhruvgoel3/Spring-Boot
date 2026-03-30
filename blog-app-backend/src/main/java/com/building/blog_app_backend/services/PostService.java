@@ -10,6 +10,9 @@ import com.building.blog_app_backend.repositories.PostRepository;
 import com.building.blog_app_backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -39,6 +42,16 @@ public class PostService {
         return this.modelMapper.map(newPost, PostDto.class);
     }
 
+    public PostDto updatePost(PostDto postDto, Integer postId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "PostId", postId));
+
+        post.setPostTitle(postDto.getPostTitle());
+        post.setPostContent(postDto.getPostContent());
+
+        Post updated = postRepository.save(post);
+        return modelMapper.map(post, PostDto.class);
+    }
+
     public List<PostDto> getPostByCategory(Integer categoryId) {
         Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category", "CategoryId", categoryId));
         List<Post> posts = postRepository.findByCategory(category);
@@ -56,14 +69,27 @@ public class PostService {
         return postDtos;
     }
 
-    public List<PostDto> getAllPost() {
-        List<Post> allPosts = postRepository.findAll();
-        List<PostDto> postDtos = allPosts.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
+    public List<PostDto> getAllPost(Integer pageNumber, Integer pageSize) {
+
+
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Page<Post> pagePost = postRepository.findAll(p);
+        List<Post> allPost = pagePost.getContent();
+        List<PostDto> postDtos = allPost.stream().map((post) -> this.modelMapper.map(post, PostDto.class)).collect(Collectors.toList());
         return postDtos;
     }
 
     public PostDto getPostById(Integer postId)
     {
-        Post postDto = postRepository.findById(postId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFoundException("Post", "PostId", postId));
+        return this.modelMapper.map(post, PostDto.class);
+    }
+
+    public void deletePostById(Integer postId) {
+        postRepository.deleteById(postId);
+    }
+
+    public void deleteAllPost() {
+        postRepository.deleteAll();
     }
 }

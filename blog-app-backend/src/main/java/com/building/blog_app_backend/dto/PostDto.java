@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @RequiredArgsConstructor
 public class PostDto {
-
+    private Integer postId;
     private String postTitle;
     private String postContent;
     private String imageName;
