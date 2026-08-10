@@ -1,25 +1,23 @@
 package com.project.crud.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
-public class Student {
-
+public class Department {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int rollNo;
-
+    private int id;
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "dept_id")
-    private Department department;
+    @OneToMany(mappedBy = "department")
+    private List<Student> students;
+
+
 }
-
-
-
